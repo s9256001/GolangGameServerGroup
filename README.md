@@ -18,7 +18,7 @@ Now I implement 3 servers in a hierarchical structure.
 
 The project is under slow development, and I am a newbie about golang. I use this project to practice some design principles of golang. So this project is no proof of work.
 
-Execution steps:
-    > go run src\cacheserver\server.go
-    > go run src\loginserver\server.go
+Execution steps:  
+    > go run src\cacheserver\server.go  
+    > go run src\loginserver\server.go  
     > go run src\regionserver\server.go
