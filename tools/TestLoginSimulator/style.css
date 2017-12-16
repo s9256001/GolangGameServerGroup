@@ -1,0 +1,16 @@
+body {
+	width: 800px;
+    margin: 100px auto;
+}
+button {
+    margin: 5px 5px 10px 0px;
+}
+
+.command {
+    width: 600px;
+    margin: 5px 5px 10px 0px;
+}
+.cmdName {
+    width: 600px;
+    margin: 0px 0px -15px 0px;
+}

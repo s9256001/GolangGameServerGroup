@@ -1,6 +1,7 @@
 package ginterface
 
 import (
+	"github.com/satori/go.uuid"
 	"golang.org/x/net/websocket"
 )
 
@@ -17,6 +18,8 @@ type IGameServer interface {
 	GetLogger() IGameLogger
 	// GetMasterPeer returns the game peer of the master server
 	GetMasterPeer() IGamePeer
+	// GetPeer returns the game peer of the peerID
+	GetPeer(peerID uuid.UUID) IGamePeer
 	// GetModule returns the specific module to resolve import cycle
 	GetModule(module interface{}) interface{}
 

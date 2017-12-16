@@ -3,6 +3,8 @@ package server
 import (
 	"golang.org/x/net/websocket"
 
+	"../handler"
+
 	"../../base/ginterface"
 	"../../servercommon"
 	"../peer"
@@ -39,5 +41,7 @@ func NewDerivedGameServer() *DerivedGameServer {
 	ret := &DerivedGameServer{}
 	ret.SubServerBase = servercommon.NewSubServerBase(ret, 1, 7771, "login", log)
 	ret.Setting.MasterURL = "ws://127.0.0.1:7770/cache"
+	ret.RegisterHandler(handler.NewRegisterAccountHandler(ret))
+	ret.RegisterHandler(handler.NewRegisterAccountResultHandler(ret))
 	return ret
 }

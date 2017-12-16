@@ -4,7 +4,9 @@ import (
 	"golang.org/x/net/websocket"
 
 	"../../base/ginterface"
+	//"../../gamecommon/gamedefine"
 	"../../servercommon"
+	"../handler"
 	"../peer"
 )
 
@@ -15,6 +17,14 @@ type DerivedGameServer struct {
 
 // OnStart is called before Start()
 func (s *DerivedGameServer) OnStart() {
+	// TODO: test
+	// for output serialized string
+	// testPacket := gamedefine.NewRegisterAccountPacket()
+	// testPacket.Account = "s9256001"
+	// testPacket.Password = "s9256001"
+	// str, _ := json.Marshal(testPacket)
+	// s.Log.Debug("%s\n", str)
+
 	s.Log.Debug("OnStart: serverName = %s\n", s.Setting.ServerName)
 }
 
@@ -38,5 +48,6 @@ func NewDerivedGameServer() *DerivedGameServer {
 	log := servercommon.NewConsoleGameLogger()
 	ret := &DerivedGameServer{}
 	ret.MasterServerBase = servercommon.NewMasterServerBase(ret, 0, 7770, "cache", log)
+	ret.RegisterHandler(handler.NewRegisterAccountHandler(ret))
 	return ret
 }

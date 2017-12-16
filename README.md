@@ -22,3 +22,9 @@ Execution steps:
     > go run src\cacheserver\server.go  
     > go run src\loginserver\server.go  
     > go run src\regionserver\server.go
+
+Test tool:
+* tools\TestLoginSimulator provides the simulated functions for the client.  
+I use it to connect and send packets to the server.  
+Since it used the local file "command.json" to load the packet json string.  
+You must turn of the access-file option of the browser, ex. change the target to "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --allow-file-access-from-files"  

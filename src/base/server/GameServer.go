@@ -91,6 +91,15 @@ func (s *GameServer) GetMasterPeer() ginterface.IGamePeer {
 	return s.MasterPeer
 }
 
+// GetPeer returns the game peer of the peerID
+func (s *GameServer) GetPeer(peerID uuid.UUID) ginterface.IGamePeer {
+	peer, ok := s.Peers[peerID]
+	if !ok {
+		return nil
+	}
+	return peer
+}
+
 // GetModule returns the specific module to resolve import cycle
 func (s *GameServer) GetModule(m interface{}) interface{} {
 	switch m.(type) {
@@ -102,12 +111,16 @@ func (s *GameServer) GetModule(m interface{}) interface{} {
 
 // SendPacket sends packet to the connection
 func (s *GameServer) SendPacket(peer ginterface.IGamePeer, packet interface{}) bool {
+	if peer == nil {
+		s.Log.Error("SendPacket: peer is nil")
+		return false
+	}
 	message, err := json.Marshal(packet)
 	if err != nil {
 		s.Log.Error("SendPacket: fail to serialize the packet! err = %v\n", err)
 		return false
 	}
-	err = websocket.Message.Send(peer.GetConn(), message)
+	err = websocket.Message.Send(peer.GetConn(), string(message))
 	if err != nil {
 		s.Log.Error("SendPacket: fail to send the packet! err = %v\n", err)
 		return false
