@@ -28,7 +28,8 @@ Execution steps:
     > GolangGameServerGroup\src\regionserver\server.exe  
 
 Test tools:
-* tools\TestLoginSimulator provides the simulated functions for the client.  
+* tools\TestLoginSimulator provides the simulated login functions for the client.  
+* tools\TestRegionSimulator provides the simulated gaming functions for the client.  
 I use it to connect and send packets to the server.  
 Since it used the local file "command.json" to load the packet json string.  
 You must turn on the access-file option of the browser, ex. change the target to  
