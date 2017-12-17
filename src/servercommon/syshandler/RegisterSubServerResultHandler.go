@@ -27,7 +27,6 @@ func (h *RegisterSubServerResultHandler) OnHandle(peer ginterface.IGamePeer, inf
 		log.Error("RegisterSubServerResultHandler.OnHandle(): failed to deserialize! info = %s\n", info)
 		return false
 	}
-	log.Debug("RegisterSubServerResultHandler.OnHandle(): code = %d, serverType = %d\n", h.Code(), packet.ServerType)
 	return true
 }
 

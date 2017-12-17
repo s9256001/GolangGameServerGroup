@@ -9,7 +9,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-// LoginResultHandler handles the registration of the player's account
+// LoginResultHandler handles player's login
 type LoginResultHandler struct {
 	*handler.GameHandler // base class
 }

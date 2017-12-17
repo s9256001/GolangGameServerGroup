@@ -6,8 +6,10 @@ import (
 
 // RegisterSubServerPacket is the packet of request of registration to the master server
 type RegisterSubServerPacket struct {
-	server.GameBasePacket     // base packet
-	ServerType            int // server type
+	server.GameBasePacket        // base packet
+	ServerType            int    // server type
+	Port                  int    // server listening port
+	ServerName            string // server name
 }
 
 // NewRegisterSubServerPacket is a constructor of RegisterSubServerPacket
@@ -20,7 +22,6 @@ func NewRegisterSubServerPacket() *RegisterSubServerPacket {
 // RegisterSubServerResultPacket is the packet of response of registration from the master server
 type RegisterSubServerResultPacket struct {
 	server.GameBasePacket     // base packet
-	ServerType            int // server type
 	Result                int // result
 }
 

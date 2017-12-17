@@ -1,0 +1,9 @@
+[
+  {
+    "name": "enter region",
+    "command": {
+      "Code": 106,
+      "PlayerKey": ""
+    }
+  }
+]

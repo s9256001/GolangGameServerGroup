@@ -6,6 +6,7 @@ var ws;
 
 var sUri = 'ws://127.0.0.1:7771/login';
 var commands;
+var playerKey = '';
 
 window.addEventListener('load', onPageLoaded, false)
 
@@ -105,8 +106,8 @@ function onWebSocketClose(e) {
     btnDisconnect.disabled = true
 }
 function onWebSocketMessage(e) {
-    
+
 }
 function onWebSocketError(e) {
-    window.alert('ERROR: ' + evt.data)
+    window.alert('ERROR: ' + e.data)
 }

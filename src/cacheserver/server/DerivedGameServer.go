@@ -6,6 +6,7 @@ import (
 	"../../base/ginterface"
 	//"../../gamecommon/gamedefine"
 	"../../servercommon"
+	"../../servercommon/sysdefine"
 	"../handler"
 	"../peer"
 )
@@ -47,8 +48,9 @@ func (s *DerivedGameServer) OnDefaultHandle(peer ginterface.IGamePeer, info stri
 func NewDerivedGameServer() *DerivedGameServer {
 	log := servercommon.NewConsoleGameLogger()
 	ret := &DerivedGameServer{}
-	ret.MasterServerBase = servercommon.NewMasterServerBase(ret, 0, 7770, "cache", log)
+	ret.MasterServerBase = servercommon.NewMasterServerBase(ret, sysdefine.ServerTypeCache, 7770, "cache", log)
 	ret.RegisterHandler(handler.NewRegisterAccountHandler(ret))
 	ret.RegisterHandler(handler.NewLoginHandler(ret))
+	ret.RegisterHandler(handler.NewEnterRegionHandler(ret))
 	return ret
 }

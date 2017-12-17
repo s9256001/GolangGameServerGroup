@@ -2,11 +2,13 @@ package syshandler
 
 import (
 	"encoding/json"
+	"strings"
 
 	"../../base/ginterface"
 	"../../base/handler"
-	"../../base/module"
 	"../sysdefine"
+	"../sysinfo"
+	uuid "github.com/satori/go.uuid"
 )
 
 // RegisterSubServerHandler handles the registration of subserver
@@ -22,20 +24,26 @@ func (h *RegisterSubServerHandler) Code() int {
 // OnHandle is called when Handle()
 func (h *RegisterSubServerHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	log := h.Server.GetLogger()
-	setting := h.Server.GetModule(module.ServerSetting{}).(module.ServerSetting)
+	subServers := h.Server.GetModule(map[uuid.UUID]sysinfo.SubServerInfo{}).(map[uuid.UUID]sysinfo.SubServerInfo)
 
 	response := sysdefine.NewRegisterSubServerResultPacket()
-	response.ServerType = 0
-	response.Result = sysdefine.Failed
 
 	packet := &sysdefine.RegisterSubServerPacket{}
 	if err := json.Unmarshal([]byte(info), &packet); err != nil {
 		log.Error("RegisterSubServerHandler.OnHandle(): failed to deserialize! info = %s\n", info)
 		return false
 	}
-	log.Debug("RegisterSubServerHandler.OnHandle(): code = %d, serverType = %d\n", h.Code(), packet.ServerType)
 
-	response.ServerType = setting.ServerType
+	subServers[peer.GetPeerID()] = sysinfo.SubServerInfo{
+		SubServerInfoBase: sysinfo.SubServerInfoBase{
+			PeerID:     peer.GetPeerID(),
+			ServerType: packet.ServerType,
+			Address:    peer.GetConn().Request().RemoteAddr[:strings.LastIndex(peer.GetConn().Request().RemoteAddr, ":")],
+			Port:       packet.Port,
+			ServerName: packet.ServerName,
+		},
+	}
+
 	response.Result = sysdefine.OK
 	h.Server.SendPacket(peer, response)
 	return true

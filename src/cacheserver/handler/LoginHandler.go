@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/satori/go.uuid"
 
@@ -9,9 +10,10 @@ import (
 	"../../base/handler"
 	"../../gamecommon/gamedefine"
 	"../../servercommon/sysdefine"
+	"../../servercommon/sysinfo"
 )
 
-// LoginHandler handles the registration of the player's account
+// LoginHandler handles player's login
 type LoginHandler struct {
 	*handler.GameHandler // base class
 }
@@ -24,6 +26,8 @@ func (h *LoginHandler) Code() int {
 // OnHandle is called when Handle()
 func (h *LoginHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	log := h.Server.GetLogger()
+	subServers := h.Server.GetModule(map[uuid.UUID]sysinfo.SubServerInfo{}).(map[uuid.UUID]sysinfo.SubServerInfo)
+	players := h.Server.GetModule(map[uuid.UUID]sysinfo.PlayerInfo{}).(map[uuid.UUID]sysinfo.PlayerInfo)
 
 	response := gamedefine.NewLoginResultPacket()
 
@@ -33,9 +37,25 @@ func (h *LoginHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 		return false
 	}
 
+	playerKey := uuid.NewV4()
+	players[playerKey] = sysinfo.PlayerInfo{
+		PlayerInfoBase: sysinfo.PlayerInfoBase{
+			PlayerKey: playerKey,
+			Name:      packet.Account,
+			Gold:      1000000,
+		},
+	}
+
+	var regionAddress string
+	for _, subServerInfo := range subServers {
+		if subServerInfo.ServerType == sysdefine.ServerTypeRegion {
+			regionAddress = fmt.Sprintf("ws://%s:%d/%s", subServerInfo.Address, subServerInfo.Port, subServerInfo.ServerName)
+		}
+	}
+
 	response.PeerID = packet.PeerID
-	response.RegionAddress = "ws://127.0.0.1:7772/region"
-	response.PlayerKey = uuid.NewV4().String()
+	response.RegionAddress = regionAddress
+	response.PlayerKey = playerKey.String()
 	response.Result = sysdefine.OK
 	h.Server.SendPacket(peer, response)
 	return true

@@ -11,4 +11,8 @@ const (
 	LoginResult
 	// Logout is the packet command of request of player's logout
 	Logout
+	// EnterRegion is the packet command of request of player's entering region
+	EnterRegion
+	// EnterRegionResult is the packet command of response of player's entering region
+	EnterRegionResult
 )

@@ -8,7 +8,7 @@ import (
 	"../../gamecommon/gamedefine"
 )
 
-// LoginHandler handles the registration of the player's account
+// LoginHandler handles player's login
 type LoginHandler struct {
 	*handler.GameHandler // base class
 }
