@@ -28,7 +28,6 @@ func (h *RegisterAccountResultHandler) OnHandle(peer ginterface.IGamePeer, info 
 		log.Error("RegisterAccountResultHandler.OnHandle(): failed to deserialize! info = %s\n", info)
 		return false
 	}
-	log.Debug("RegisterAccountResultHandler.OnHandle(): code = %d, result = %v\n", h.Code(), packet.Result)
 
 	peerID, _ := uuid.FromString(packet.PeerID)
 	clientPeer := h.Server.GetPeer(peerID)

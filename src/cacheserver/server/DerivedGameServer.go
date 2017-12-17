@@ -49,5 +49,6 @@ func NewDerivedGameServer() *DerivedGameServer {
 	ret := &DerivedGameServer{}
 	ret.MasterServerBase = servercommon.NewMasterServerBase(ret, 0, 7770, "cache", log)
 	ret.RegisterHandler(handler.NewRegisterAccountHandler(ret))
+	ret.RegisterHandler(handler.NewLoginHandler(ret))
 	return ret
 }

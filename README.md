@@ -21,10 +21,15 @@ The project is under slow development, and I am a newbie about golang. I use thi
 Execution steps:  
     > go run src\cacheserver\server.go  
     > go run src\loginserver\server.go  
-    > go run src\regionserver\server.go
+    > go run src\regionserver\server.go  
+    or use the prebuild executable files:  
+    > GolangGameServerGroup\src\cacheserver\server.exe  
+    > GolangGameServerGroup\src\loginserver\server.exe  
+    > GolangGameServerGroup\src\regionserver\server.exe  
 
-Test tool:
+Test tools:
 * tools\TestLoginSimulator provides the simulated functions for the client.  
 I use it to connect and send packets to the server.  
 Since it used the local file "command.json" to load the packet json string.  
-You must turn of the access-file option of the browser, ex. change the target to "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --allow-file-access-from-files"  
+You must turn on the access-file option of the browser, ex. change the target to  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe --allow-file-access-from-files".  

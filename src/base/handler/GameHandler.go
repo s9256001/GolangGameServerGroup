@@ -12,8 +12,16 @@ type GameHandler struct {
 	Server ginterface.IGameServer // server
 }
 
+// Code is the associated packet command
+func (h *GameHandler) Code() int {
+	return 0
+}
+
 // Handle handles the packet
 func (h *GameHandler) Handle(peer ginterface.IGamePeer, info string) bool {
+	log := h.Server.GetLogger()
+
+	log.Trace("GameHandler.Handle: code = %d, info = %s\n", h.Code(), info)
 	return h.OnHandle(peer, info)
 }
 

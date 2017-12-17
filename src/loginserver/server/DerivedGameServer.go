@@ -43,5 +43,7 @@ func NewDerivedGameServer() *DerivedGameServer {
 	ret.Setting.MasterURL = "ws://127.0.0.1:7770/cache"
 	ret.RegisterHandler(handler.NewRegisterAccountHandler(ret))
 	ret.RegisterHandler(handler.NewRegisterAccountResultHandler(ret))
+	ret.RegisterHandler(handler.NewLoginHandler(ret))
+	ret.RegisterHandler(handler.NewLoginResultHandler(ret))
 	return ret
 }

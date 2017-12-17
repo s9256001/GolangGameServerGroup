@@ -32,3 +32,34 @@ func NewRegisterAccountResultPacket() *RegisterAccountResultPacket {
 	ret.Code = RegisterAccountResult
 	return ret
 }
+
+// LoginPacket is the packet of request of player's login
+type LoginPacket struct {
+	server.GameBasePacket        // base packet
+	PeerID                string // player's peer id
+	Account               string // player's account
+	Password              string // player's password
+}
+
+// NewLoginPacket is a constructor of LoginPacket
+func NewLoginPacket() *LoginPacket {
+	ret := &LoginPacket{}
+	ret.Code = Login
+	return ret
+}
+
+// LoginResultPacket is the packet of response of player's login
+type LoginResultPacket struct {
+	server.GameBasePacket        // base packet
+	PeerID                string `json:",omitempty"` // player's peer id
+	RegionAddress         string // region server's address
+	PlayerKey             string // player's key for communicating to the region server
+	Result                int    // result
+}
+
+// NewLoginResultPacket is a constructor of LoginResultPacket
+func NewLoginResultPacket() *LoginResultPacket {
+	ret := &LoginResultPacket{}
+	ret.Code = LoginResult
+	return ret
+}

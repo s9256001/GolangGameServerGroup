@@ -31,7 +31,6 @@ func (h *RegisterAccountHandler) OnHandle(peer ginterface.IGamePeer, info string
 		log.Error("RegisterAccountHandler.OnHandle(): failed to deserialize! info = %s\n", info)
 		return false
 	}
-	log.Debug("RegisterAccountHandler.OnHandle(): code = %d, account = %s, password=%s\n", h.Code(), packet.Account, packet.Password)
 
 	if packet.Account == "" {
 		response.Result = gamedefine.RegisterAccountInvalidAccount
