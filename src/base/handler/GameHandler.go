@@ -21,7 +21,7 @@ func (h *GameHandler) Code() int {
 func (h *GameHandler) Handle(peer ginterface.IGamePeer, info string) bool {
 	log := h.Server.GetLogger()
 
-	log.Trace("GameHandler.Handle: code = %d, info = %s\n", h.Code(), info)
+	log.Trace("Handle: code = %d, info = %s\n", h.Code(), info)
 	return h.OnHandle(peer, info)
 }
 

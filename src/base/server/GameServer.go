@@ -8,6 +8,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/net/websocket"
 
+	"../basedefine"
 	"../ginterface"
 	"../module"
 )
@@ -152,7 +153,7 @@ func (s *GameServer) PeerReceiveLoop(peer ginterface.IGamePeer) {
 		}
 
 		// deserialize the packet
-		basePacket := GameBasePacket{}
+		basePacket := basedefine.GameBasePacket{}
 		if err := json.Unmarshal([]byte(receivedMessage), &basePacket); err != nil {
 			s.Log.Error("PeerHandler: deserialized failed! err = %v\n", err)
 			peer.OnDisconnected()

@@ -5,5 +5,12 @@
       "Code": 106,
       "PlayerKey": ""
     }
+  },
+  {
+    "name": "enter game",
+    "command": {
+      "Code": 108,
+      "GameID": 99
+    }
   }
 ]

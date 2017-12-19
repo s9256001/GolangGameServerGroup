@@ -15,4 +15,13 @@ const (
 	EnterRegion
 	// EnterRegionResult is the packet command of response of player's entering region
 	EnterRegionResult
+
+	// EnterGame is the packet command of request of player's entering game
+	EnterGame
+	// EnterGameResult is the packet command of response of player's entering game
+	EnterGameResult
+	// LeaveGame is the packet command of request of player's leaving game
+	LeaveGame
+	// LeaveGameResult is the packet command of response of player's leaving game
+	LeaveGameResult
 )
