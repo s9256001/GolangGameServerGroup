@@ -33,24 +33,24 @@ func (s *DerivedGameServer) GetModule(m interface{}) interface{} {
 
 // OnStart is called before Start()
 func (s *DerivedGameServer) OnStart() {
-	s.Log.Debug("OnStart: serverName = %s\n", s.Setting.ServerName)
+	s.GetLogger().Debug("OnStart: serverName = %s\n", s.Setting.ServerName)
 
 	var game ginterface.IGame
-	game = testgame.NewDerivedGame(s.Log, s)
+	game = testgame.NewDerivedGame(s.GetLogger(), s)
 	s.Games[game.GameID()] = game
 
 	for _, game := range s.Games {
 		if game.Init(nil) == true {
-			s.Log.Debug("OnStart: game %d initialize success.\n", game.GameID())
+			s.GetLogger().Debug("OnStart: game %d initialize success.\n", game.GameID())
 		} else {
-			s.Log.Error("OnStart: game %d initialize failed.\n", game.GameID())
+			s.GetLogger().Error("OnStart: game %d initialize failed.\n", game.GameID())
 		}
 	}
 }
 
 // OnStopped is called at the end of Stop()
 func (s *DerivedGameServer) OnStopped() {
-	s.Log.Debug("OnStopped: serverName = %s\n", s.Setting.ServerName)
+	s.GetLogger().Debug("OnStopped: serverName = %s\n", s.Setting.ServerName)
 }
 
 // OnCreatePeer is called to create the custom peer
@@ -60,7 +60,7 @@ func (s *DerivedGameServer) OnCreatePeer(conn *websocket.Conn) ginterface.IGameP
 
 // OnDefaultHandle is called when there is no corresponding packet handler
 func (s *DerivedGameServer) OnDefaultHandle(peer ginterface.IGamePeer, info string) {
-	s.Log.Debug("OnDefaultHandle: info = %s\n", info)
+	s.GetLogger().Debug("OnDefaultHandle: info = %s\n", info)
 }
 
 // NewDerivedGameServer is a constructor of DerivedGameServer

@@ -21,7 +21,7 @@ func (h *EnterGameHandler) Code() int {
 
 // OnHandle is called when Handle()
 func (h *EnterGameHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
-	log := h.Server.GetLogger()
+	log := h.Node.GetLogger()
 
 	packet := &gamedefine.EnterGamePacket{}
 	if err := json.Unmarshal([]byte(info), &packet); err != nil {
@@ -32,13 +32,13 @@ func (h *EnterGameHandler) OnHandle(peer ginterface.IGamePeer, info string) bool
 	result.GameID = packet.GameID
 	result.Result = sysdefine.OK
 
-	h.Server.SendPacket(peer, result)
+	h.Node.(ginterface.IGame).GetServer().SendPacket(peer, result)
 	return true
 }
 
 // NewEnterGameHandler is a constructor of EnterGameHandler
-func NewEnterGameHandler(server ginterface.IGameServer) *EnterGameHandler {
+func NewEnterGameHandler(node ginterface.INode) *EnterGameHandler {
 	ret := &EnterGameHandler{}
-	ret.GameHandler = handler.NewGameHandler(ret, server)
+	ret.GameHandler = handler.NewGameHandler(ret, node)
 	return ret
 }

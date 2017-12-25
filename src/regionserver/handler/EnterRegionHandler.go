@@ -20,7 +20,7 @@ func (h *EnterRegionHandler) Code() int {
 
 // OnHandle is called when Handle()
 func (h *EnterRegionHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
-	log := h.Server.GetLogger()
+	log := h.Node.GetLogger()
 
 	packet := &gamedefine.EnterRegionPacket{}
 	if err := json.Unmarshal([]byte(info), &packet); err != nil {
@@ -29,13 +29,13 @@ func (h *EnterRegionHandler) OnHandle(peer ginterface.IGamePeer, info string) bo
 	}
 
 	packet.PeerID = peer.GetPeerID().String()
-	h.Server.SendPacket(h.Server.GetMasterPeer(), packet)
+	h.Node.(ginterface.IGameServer).SendPacket(h.Node.(ginterface.IGameServer).GetMasterPeer(), packet)
 	return true
 }
 
 // NewEnterRegionHandler is a constructor of EnterRegionHandler
-func NewEnterRegionHandler(server ginterface.IGameServer) *EnterRegionHandler {
+func NewEnterRegionHandler(node ginterface.INode) *EnterRegionHandler {
 	ret := &EnterRegionHandler{}
-	ret.GameHandler = handler.NewGameHandler(ret, server)
+	ret.GameHandler = handler.NewGameHandler(ret, node)
 	return ret
 }

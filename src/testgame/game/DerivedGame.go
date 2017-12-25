@@ -39,7 +39,8 @@ func NewDerivedGame(log ginterface.IGameLogger, server ginterface.IGameServer) *
 	ret := &DerivedGame{}
 	ret.Game = game.NewGame(ret, log, server)
 	ret.Model = model.NewDerivedModel()
+
 	ret.State = state.NewDerivedState(ret)
-	ret.RegisterHandler(handler.NewEnterGameHandler(ret.Server))
+	ret.RegisterHandler(handler.NewEnterGameHandler(ret))
 	return ret
 }

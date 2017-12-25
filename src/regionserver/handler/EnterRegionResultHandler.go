@@ -22,8 +22,8 @@ func (h *EnterRegionResultHandler) Code() int {
 
 // OnHandle is called when Handle()
 func (h *EnterRegionResultHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
-	log := h.Server.GetLogger()
-	players := h.Server.GetModule(map[uuid.UUID]sysinfo.PlayerInfo{}).(map[uuid.UUID]sysinfo.PlayerInfo)
+	log := h.Node.GetLogger()
+	players := h.Node.(ginterface.IGameServer).GetModule(map[uuid.UUID]sysinfo.PlayerInfo{}).(map[uuid.UUID]sysinfo.PlayerInfo)
 
 	packet := &gamedefine.EnterRegionResultPacket{}
 	if err := json.Unmarshal([]byte(info), &packet); err != nil {
@@ -36,15 +36,15 @@ func (h *EnterRegionResultHandler) OnHandle(peer ginterface.IGamePeer, info stri
 	}
 
 	peerID, _ := uuid.FromString(packet.PeerID)
-	clientPeer := h.Server.GetPeer(peerID)
+	clientPeer := h.Node.(ginterface.IGameServer).GetPeer(peerID)
 	packet.PeerID = ""
-	h.Server.SendPacket(clientPeer, packet)
+	h.Node.(ginterface.IGameServer).SendPacket(clientPeer, packet)
 	return true
 }
 
 // NewEnterRegionResultHandler is a constructor of EnterRegionResultHandler
-func NewEnterRegionResultHandler(server ginterface.IGameServer) *EnterRegionResultHandler {
+func NewEnterRegionResultHandler(node ginterface.INode) *EnterRegionResultHandler {
 	ret := &EnterRegionResultHandler{}
-	ret.GameHandler = handler.NewGameHandler(ret, server)
+	ret.GameHandler = handler.NewGameHandler(ret, node)
 	return ret
 }

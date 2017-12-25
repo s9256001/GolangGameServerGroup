@@ -7,6 +7,8 @@ import (
 
 // IGameServer is an interface of the game server
 type IGameServer interface {
+	INode
+
 	// RegisterHandler registers the packet handler
 	RegisterHandler(handler IGameHandler)
 	// Start starts the server
@@ -14,14 +16,10 @@ type IGameServer interface {
 	// Stop stops the server
 	Stop() bool
 
-	// GetLogger returns the game logger
-	GetLogger() IGameLogger
 	// GetMasterPeer returns the game peer of the master server
 	GetMasterPeer() IGamePeer
 	// GetPeer returns the game peer of the peerID
 	GetPeer(peerID uuid.UUID) IGamePeer
-	// GetModule returns the specific module to resolve import cycle
-	GetModule(module interface{}) interface{}
 
 	// SendPacket sends packet to the connection
 	SendPacket(peer IGamePeer, packet interface{}) bool

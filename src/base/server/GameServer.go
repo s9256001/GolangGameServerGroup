@@ -11,20 +11,30 @@ import (
 	"../basedefine"
 	"../ginterface"
 	"../module"
+	"../node"
 )
 
 // GameServer is an abstract class of the game server
 // It fits the interface of IGameServer, and depends on the derived type to implement the interface of IGameServerHook
 type GameServer struct {
 	ginterface.IGameServerHook // hook
+	*node.Node                 // base class
 
 	Handle   *http.Server                       // http server handle
 	Setting  module.ServerSetting               // server setting
 	Handlers map[int]ginterface.IGameHandler    // map of packet handlers with key denoting the packet command
 	Peers    map[uuid.UUID]ginterface.IGamePeer // map of game peers with key denoting the peer id
-	Log      ginterface.IGameLogger             // game logger
 
 	MasterPeer ginterface.IGamePeer // game peer of the master server
+}
+
+// GetModule returns the specific module to resolve import cycle
+func (s *GameServer) GetModule(m interface{}) interface{} {
+	switch m.(type) {
+	case module.ServerSetting:
+		return s.Setting
+	}
+	return nil
 }
 
 // RegisterHandler registers the packet handler
@@ -82,11 +92,6 @@ func (s *GameServer) Stop() bool {
 	return true
 }
 
-// GetLogger returns the game logger
-func (s *GameServer) GetLogger() ginterface.IGameLogger {
-	return s.Log
-}
-
 // GetMasterPeer returns the game peer of the master server
 func (s *GameServer) GetMasterPeer() ginterface.IGamePeer {
 	return s.MasterPeer
@@ -99,15 +104,6 @@ func (s *GameServer) GetPeer(peerID uuid.UUID) ginterface.IGamePeer {
 		return nil
 	}
 	return peer
-}
-
-// GetModule returns the specific module to resolve import cycle
-func (s *GameServer) GetModule(m interface{}) interface{} {
-	switch m.(type) {
-	case module.ServerSetting:
-		return s.Setting
-	}
-	return nil
 }
 
 // SendPacket sends packet to the connection
@@ -173,6 +169,7 @@ func (s *GameServer) PeerReceiveLoop(peer ginterface.IGamePeer) {
 func NewGameServer(hook ginterface.IGameServerHook, serverType int, port int, serverName string, log ginterface.IGameLogger) *GameServer {
 	ret := &GameServer{
 		IGameServerHook: hook,
+		Node:            node.NewNode(log),
 
 		Setting: module.ServerSetting{
 			ServerType: serverType,
@@ -181,7 +178,6 @@ func NewGameServer(hook ginterface.IGameServerHook, serverType int, port int, se
 		},
 		Handlers: make(map[int]ginterface.IGameHandler),
 		Peers:    make(map[uuid.UUID]ginterface.IGamePeer),
-		Log:      log,
 	}
 	return ret
 }

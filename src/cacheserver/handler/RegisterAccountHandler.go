@@ -21,7 +21,7 @@ func (h *RegisterAccountHandler) Code() int {
 
 // OnHandle is called when Handle()
 func (h *RegisterAccountHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
-	log := h.Server.GetLogger()
+	log := h.Node.(ginterface.IGameServer).GetLogger()
 
 	response := gamedefine.NewRegisterAccountResultPacket()
 
@@ -33,13 +33,13 @@ func (h *RegisterAccountHandler) OnHandle(peer ginterface.IGamePeer, info string
 
 	response.PeerID = packet.PeerID
 	response.Result = sysdefine.OK
-	h.Server.SendPacket(peer, response)
+	h.Node.(ginterface.IGameServer).SendPacket(peer, response)
 	return true
 }
 
 // NewRegisterAccountHandler is a constructor of RegisterAccountHandler
-func NewRegisterAccountHandler(server ginterface.IGameServer) *RegisterAccountHandler {
+func NewRegisterAccountHandler(node ginterface.INode) *RegisterAccountHandler {
 	ret := &RegisterAccountHandler{}
-	ret.GameHandler = handler.NewGameHandler(ret, server)
+	ret.GameHandler = handler.NewGameHandler(ret, node)
 	return ret
 }

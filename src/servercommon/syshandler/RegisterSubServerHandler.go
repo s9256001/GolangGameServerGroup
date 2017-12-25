@@ -23,8 +23,8 @@ func (h *RegisterSubServerHandler) Code() int {
 
 // OnHandle is called when Handle()
 func (h *RegisterSubServerHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
-	log := h.Server.GetLogger()
-	subServers := h.Server.GetModule(map[uuid.UUID]sysinfo.SubServerInfo{}).(map[uuid.UUID]sysinfo.SubServerInfo)
+	log := h.Node.GetLogger()
+	subServers := h.Node.(ginterface.IGameServer).GetModule(map[uuid.UUID]sysinfo.SubServerInfo{}).(map[uuid.UUID]sysinfo.SubServerInfo)
 
 	response := sysdefine.NewRegisterSubServerResultPacket()
 
@@ -45,13 +45,13 @@ func (h *RegisterSubServerHandler) OnHandle(peer ginterface.IGamePeer, info stri
 	}
 
 	response.Result = sysdefine.OK
-	h.Server.SendPacket(peer, response)
+	h.Node.(ginterface.IGameServer).SendPacket(peer, response)
 	return true
 }
 
 // NewRegisterSubServerHandler is a constructor of RegisterSubServerHandler
-func NewRegisterSubServerHandler(server ginterface.IGameServer) *RegisterSubServerHandler {
+func NewRegisterSubServerHandler(node ginterface.INode) *RegisterSubServerHandler {
 	ret := &RegisterSubServerHandler{}
-	ret.GameHandler = handler.NewGameHandler(ret, server)
+	ret.GameHandler = handler.NewGameHandler(ret, node)
 	return ret
 }

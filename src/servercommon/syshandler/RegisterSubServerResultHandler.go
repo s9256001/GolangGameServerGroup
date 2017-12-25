@@ -20,7 +20,7 @@ func (h *RegisterSubServerResultHandler) Code() int {
 
 // OnHandle is called when Handle()
 func (h *RegisterSubServerResultHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
-	log := h.Server.GetLogger()
+	log := h.Node.(ginterface.IGameServer).GetLogger()
 
 	packet := &sysdefine.RegisterSubServerResultPacket{}
 	if err := json.Unmarshal([]byte(info), &packet); err != nil {
@@ -31,8 +31,8 @@ func (h *RegisterSubServerResultHandler) OnHandle(peer ginterface.IGamePeer, inf
 }
 
 // NewRegisterSubServerResultHandler is a constructor of RegisterSubServerResultHandler
-func NewRegisterSubServerResultHandler(server ginterface.IGameServer) *RegisterSubServerResultHandler {
+func NewRegisterSubServerResultHandler(node ginterface.INode) *RegisterSubServerResultHandler {
 	ret := &RegisterSubServerResultHandler{}
-	ret.GameHandler = handler.NewGameHandler(ret, server)
+	ret.GameHandler = handler.NewGameHandler(ret, node)
 	return ret
 }

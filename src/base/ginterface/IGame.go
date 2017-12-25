@@ -2,6 +2,8 @@ package ginterface
 
 // IGame is an interface of a game
 type IGame interface {
+	INode
+
 	// GameID gets the game ID of the game
 	GameID() int
 	// Init initlizes the game
@@ -10,6 +12,8 @@ type IGame interface {
 	Release() bool
 	// HandlePacket handles the packet
 	HandlePacket(peer IGamePeer, info string)
+	// GetServer returns the game server
+	GetServer() IGameServer
 }
 
 // IGameHook is an interface of hook of the game server

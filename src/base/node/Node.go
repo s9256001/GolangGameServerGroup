@@ -14,6 +14,16 @@ type Node struct {
 	State ginterface.INodeState  // node state
 }
 
+// GetLogger returns the game logger
+func (n *Node) GetLogger() ginterface.IGameLogger {
+	return n.Log
+}
+
+// GetModule returns the specific module to resolve import cycle
+func (n *Node) GetModule(module interface{}) interface{} {
+	return nil
+}
+
 // GetModel gets the model
 func (n *Node) GetModel() ginterface.INodeModel {
 	return n.Model
@@ -49,6 +59,6 @@ func (n *Node) OnUpdate(gapSecs int) {
 
 // NewNode is a constructor of Node
 func NewNode(log ginterface.IGameLogger) *Node {
-	ret := &Node{}
+	ret := &Node{Log: log}
 	return ret
 }

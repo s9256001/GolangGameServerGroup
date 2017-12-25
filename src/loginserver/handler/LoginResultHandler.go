@@ -21,7 +21,7 @@ func (h *LoginResultHandler) Code() int {
 
 // OnHandle is called when Handle()
 func (h *LoginResultHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
-	log := h.Server.GetLogger()
+	log := h.Node.GetLogger()
 
 	packet := &gamedefine.LoginResultPacket{}
 	if err := json.Unmarshal([]byte(info), &packet); err != nil {
@@ -30,15 +30,15 @@ func (h *LoginResultHandler) OnHandle(peer ginterface.IGamePeer, info string) bo
 	}
 
 	peerID, _ := uuid.FromString(packet.PeerID)
-	clientPeer := h.Server.GetPeer(peerID)
+	clientPeer := h.Node.(ginterface.IGameServer).GetPeer(peerID)
 	packet.PeerID = ""
-	h.Server.SendPacket(clientPeer, packet)
+	h.Node.(ginterface.IGameServer).SendPacket(clientPeer, packet)
 	return true
 }
 
 // NewLoginResultHandler is a constructor of LoginResultHandler
-func NewLoginResultHandler(server ginterface.IGameServer) *LoginResultHandler {
+func NewLoginResultHandler(node ginterface.INode) *LoginResultHandler {
 	ret := &LoginResultHandler{}
-	ret.GameHandler = handler.NewGameHandler(ret, server)
+	ret.GameHandler = handler.NewGameHandler(ret, node)
 	return ret
 }

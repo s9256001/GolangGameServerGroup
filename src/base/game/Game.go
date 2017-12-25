@@ -15,7 +15,6 @@ type Game struct {
 	*node.Node           // base class
 
 	Handlers map[int]ginterface.IGameHandler // map of packet handlers with key denoting the packet command
-	Log      ginterface.IGameLogger          // game logger
 
 	Server ginterface.IGameServer // game server
 }
@@ -53,6 +52,11 @@ func (g *Game) HandlePacket(peer ginterface.IGamePeer, info string) {
 	}
 }
 
+// GetServer returns the game server
+func (g *Game) GetServer() ginterface.IGameServer {
+	return g.Server
+}
+
 // RegisterHandler registers the packet handler
 func (g *Game) RegisterHandler(handler ginterface.IGameHandler) {
 	g.Handlers[handler.Code()] = handler
@@ -62,12 +66,11 @@ func (g *Game) RegisterHandler(handler ginterface.IGameHandler) {
 func NewGame(hook ginterface.IGameHook, log ginterface.IGameLogger, server ginterface.IGameServer) *Game {
 	ret := &Game{
 		IGameHook: hook,
+		Node:      node.NewNode(log),
 
 		Handlers: make(map[int]ginterface.IGameHandler),
-		Log:      log,
 
 		Server: server,
 	}
-	ret.Node = node.NewNode(log)
 	return ret
 }

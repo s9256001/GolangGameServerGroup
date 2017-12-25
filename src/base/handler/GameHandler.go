@@ -9,7 +9,7 @@ import (
 type GameHandler struct {
 	ginterface.IGameHandlerHook // hook
 
-	Server ginterface.IGameServer // server
+	Node ginterface.INode // node
 }
 
 // Code is the associated packet command
@@ -19,18 +19,18 @@ func (h *GameHandler) Code() int {
 
 // Handle handles the packet
 func (h *GameHandler) Handle(peer ginterface.IGamePeer, info string) bool {
-	log := h.Server.GetLogger()
+	log := h.Node.GetLogger()
 
 	log.Trace("Handle: code = %d, info = %s\n", h.Code(), info)
 	return h.OnHandle(peer, info)
 }
 
 // NewGameHandler is a constructor of GameHandler
-func NewGameHandler(hook ginterface.IGameHandlerHook, server ginterface.IGameServer) *GameHandler {
+func NewGameHandler(hook ginterface.IGameHandlerHook, node ginterface.INode) *GameHandler {
 	ret := &GameHandler{
 		IGameHandlerHook: hook,
 
-		Server: server,
+		Node: node,
 	}
 	return ret
 }

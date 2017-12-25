@@ -25,9 +25,9 @@ func (h *LoginHandler) Code() int {
 
 // OnHandle is called when Handle()
 func (h *LoginHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
-	log := h.Server.GetLogger()
-	subServers := h.Server.GetModule(map[uuid.UUID]sysinfo.SubServerInfo{}).(map[uuid.UUID]sysinfo.SubServerInfo)
-	players := h.Server.GetModule(map[uuid.UUID]sysinfo.PlayerInfo{}).(map[uuid.UUID]sysinfo.PlayerInfo)
+	log := h.Node.GetLogger()
+	subServers := h.Node.(ginterface.IGameServer).GetModule(map[uuid.UUID]sysinfo.SubServerInfo{}).(map[uuid.UUID]sysinfo.SubServerInfo)
+	players := h.Node.(ginterface.IGameServer).GetModule(map[uuid.UUID]sysinfo.PlayerInfo{}).(map[uuid.UUID]sysinfo.PlayerInfo)
 
 	response := gamedefine.NewLoginResultPacket()
 
@@ -57,13 +57,13 @@ func (h *LoginHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	response.RegionAddress = regionAddress
 	response.PlayerKey = playerKey.String()
 	response.Result = sysdefine.OK
-	h.Server.SendPacket(peer, response)
+	h.Node.(ginterface.IGameServer).SendPacket(peer, response)
 	return true
 }
 
 // NewLoginHandler is a constructor of LoginHandler
-func NewLoginHandler(server ginterface.IGameServer) *LoginHandler {
+func NewLoginHandler(node ginterface.INode) *LoginHandler {
 	ret := &LoginHandler{}
-	ret.GameHandler = handler.NewGameHandler(ret, server)
+	ret.GameHandler = handler.NewGameHandler(ret, node)
 	return ret
 }
