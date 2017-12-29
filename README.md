@@ -1,15 +1,22 @@
 # GolangGameServerGroup
 A group of game servers written in golang with websocket connections.
 
+[![directory-tree-print](./projecttree.png)](https://github.com/s9256001/GolangGameServerGroup)
+
 The base/ directory contains packages about the infrastructure of the group of servers.
 * base/ginterface provides the contracts for decoupling the relationships.
+* base/logger provides log function.
 * base/server corresponds to 1 server.
 * base/peer corresponds to 1 connection.
-* base/logger provides log function.
 * base/handler handles the request from peer server or client.
 * base/module contains some modules cooperated with the server.
+* base/game corresponds to 1 game.
+* base/node corresponds to 1 instance with model and state control.
+* base/nodemodel provide the model of the node.
+* base/nodestate provide the states of the node.
 
 The servercommon/ directory contains common operations for servers.
+The gamercommon/ directory contains common operations for games.
 
 Now I implement 3 servers in a hierarchical structure.
 * The cache server is the root/master server. It coordinates whole subservers.
