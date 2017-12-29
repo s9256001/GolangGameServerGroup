@@ -11,7 +11,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-// RegisterSubServerHandler handles the registration of subserver
+// RegisterSubServerHandler handles the request of the registration of subserver
 type RegisterSubServerHandler struct {
 	*handler.GameHandler // base class
 }
@@ -21,12 +21,15 @@ func (h *RegisterSubServerHandler) Code() int {
 	return sysdefine.RegisterSubServer
 }
 
-// OnHandle is called when Handle()
+// OnHandle is called when Handling the packet
 func (h *RegisterSubServerHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	log := h.Node.GetLogger()
-	subServers := h.Node.(ginterface.IGameServer).GetModule(map[uuid.UUID]sysinfo.SubServerInfo{}).(map[uuid.UUID]sysinfo.SubServerInfo)
+	subServers := h.Node.(ginterface.IGameServer).GetModule(map[uuid.UUID]*sysinfo.SubServerInfo{}).(map[uuid.UUID]*sysinfo.SubServerInfo)
 
 	response := sysdefine.NewRegisterSubServerResultPacket()
+	response.Result = sysdefine.Failed
+
+	defer h.Node.(ginterface.IGameServer).SendPacket(peer, response)
 
 	packet := &sysdefine.RegisterSubServerPacket{}
 	if err := json.Unmarshal([]byte(info), &packet); err != nil {
@@ -34,7 +37,13 @@ func (h *RegisterSubServerHandler) OnHandle(peer ginterface.IGamePeer, info stri
 		return false
 	}
 
-	subServers[peer.GetPeerID()] = sysinfo.SubServerInfo{
+	if subserverInfo, ok := subServers[peer.GetPeerID()]; ok {
+		log.Error("RegisterSubServerHandler.OnHandle(): already registered! peerID = %s, serverType = %d\n", peer.GetPeerID().String(), subserverInfo.ServerType)
+		response.Result = sysdefine.RegisterSubServerRegistered
+		return false
+	}
+
+	subServers[peer.GetPeerID()] = &sysinfo.SubServerInfo{
 		SubServerInfoBase: sysinfo.SubServerInfoBase{
 			PeerID:     peer.GetPeerID(),
 			ServerType: packet.ServerType,
@@ -45,7 +54,6 @@ func (h *RegisterSubServerHandler) OnHandle(peer ginterface.IGamePeer, info stri
 	}
 
 	response.Result = sysdefine.OK
-	h.Node.(ginterface.IGameServer).SendPacket(peer, response)
 	return true
 }
 

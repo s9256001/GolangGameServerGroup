@@ -9,7 +9,7 @@ import (
 	"../state"
 )
 
-// DerivedGame implements the common operations of the subserver
+// DerivedGame implements the test game instance
 type DerivedGame struct {
 	*game.Game // base class
 }
@@ -31,7 +31,7 @@ func (g *DerivedGame) OnRelease() bool {
 
 // OnDefaultHandle is called when there is no corresponding packet handler
 func (g *DerivedGame) OnDefaultHandle(peer ginterface.IGamePeer, info string) {
-	g.Log.Debug("OnDefaultHandle: info = %s\n", info)
+	g.Log.Debug("DerivedGame.OnDefaultHandle: info = %s\n", info)
 }
 
 // NewDerivedGame is a constructor of DerivedGame
@@ -40,7 +40,7 @@ func NewDerivedGame(log ginterface.IGameLogger, server ginterface.IGameServer) *
 	ret.Game = game.NewGame(ret, log, server)
 	ret.Model = model.NewDerivedModel()
 
-	ret.State = state.NewDerivedState(ret)
+	ret.State = state.NewInitState(ret)
 	ret.RegisterHandler(handler.NewEnterGameHandler(ret))
 	return ret
 }

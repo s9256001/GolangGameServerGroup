@@ -5,29 +5,29 @@ import (
 	"../../base/nodestate"
 )
 
-// DerivedState is the custom state of this state
-type DerivedState struct {
+// InitState is the initial state
+type InitState struct {
 	*nodestate.NodeState // base class
 }
 
 // OnEnter is called when entering this state
-func (s *DerivedState) OnEnter() {
+func (s *InitState) OnEnter() {
 
 }
 
 // OnExit is called when exiting this state
-func (s *DerivedState) OnExit() {
+func (s *InitState) OnExit() {
 
 }
 
 // OnUpdate is called when updating this state
-func (s *DerivedState) OnUpdate(gapSecs int) {
+func (s *InitState) OnUpdate(gapSecs int) {
 
 }
 
-// NewDerivedState is a constructor of DerivedState
-func NewDerivedState(node ginterface.INode) *DerivedState {
-	ret := &DerivedState{}
+// NewInitState is a constructor of InitState
+func NewInitState(node ginterface.INode) *InitState {
+	ret := &InitState{}
 	ret.NodeState = nodestate.NewNodeState(node)
 	return ret
 }

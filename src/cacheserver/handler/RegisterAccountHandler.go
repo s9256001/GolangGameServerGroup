@@ -9,7 +9,7 @@ import (
 	"../../servercommon/sysdefine"
 )
 
-// RegisterAccountHandler handles the registration of the player's account
+// RegisterAccountHandler handles the request of the registration of the player's account
 type RegisterAccountHandler struct {
 	*handler.GameHandler // base class
 }
@@ -19,11 +19,14 @@ func (h *RegisterAccountHandler) Code() int {
 	return gamedefine.RegisterAccount
 }
 
-// OnHandle is called when Handle()
+// OnHandle is called when Handling the packet
 func (h *RegisterAccountHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	log := h.Node.(ginterface.IGameServer).GetLogger()
 
 	response := gamedefine.NewRegisterAccountResultPacket()
+	response.Result = sysdefine.Failed
+
+	defer h.Node.(ginterface.IGameServer).SendPacket(peer, response)
 
 	packet := &gamedefine.RegisterAccountPacket{}
 	if err := json.Unmarshal([]byte(info), &packet); err != nil {
@@ -33,7 +36,6 @@ func (h *RegisterAccountHandler) OnHandle(peer ginterface.IGamePeer, info string
 
 	response.PeerID = packet.PeerID
 	response.Result = sysdefine.OK
-	h.Node.(ginterface.IGameServer).SendPacket(peer, response)
 	return true
 }
 

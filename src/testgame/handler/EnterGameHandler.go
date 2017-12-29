@@ -9,7 +9,7 @@ import (
 	"../../servercommon/sysdefine"
 )
 
-// EnterGameHandler handles player's entering game
+// EnterGameHandler handles the request of player's entering game
 type EnterGameHandler struct {
 	*handler.GameHandler // base class
 }
@@ -19,20 +19,25 @@ func (h *EnterGameHandler) Code() int {
 	return gamedefine.EnterGame
 }
 
-// OnHandle is called when Handle()
+// OnHandle is called when Handling the packet
 func (h *EnterGameHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	log := h.Node.GetLogger()
+
+	result := gamedefine.NewEnterGameResultPacket()
+	result.Result = sysdefine.Failed
+
+	defer h.Node.(ginterface.IGame).GetServer().SendPacket(peer, result)
 
 	packet := &gamedefine.EnterGamePacket{}
 	if err := json.Unmarshal([]byte(info), &packet); err != nil {
 		log.Error("EnterGameHandler.OnHandle(): failed to deserialize! info = %s\n", info)
 		return false
 	}
-	result := gamedefine.NewEnterGameResultPacket()
+
+	// todo
+
 	result.GameID = packet.GameID
 	result.Result = sysdefine.OK
-
-	h.Node.(ginterface.IGame).GetServer().SendPacket(peer, result)
 	return true
 }
 

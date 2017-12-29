@@ -16,12 +16,18 @@ type Game struct {
 
 	Handlers map[int]ginterface.IGameHandler // map of packet handlers with key denoting the packet command
 
+	// todo
 	Server ginterface.IGameServer // game server
 }
 
 // GameID gets the game ID of the game
 func (g *Game) GameID() int {
 	return 0
+}
+
+// RegisterHandler registers the packet handler
+func (g *Game) RegisterHandler(handler ginterface.IGameHandler) {
+	g.Handlers[handler.Code()] = handler
 }
 
 // Init initlizes the game
@@ -41,11 +47,12 @@ func (g *Game) HandlePacket(peer ginterface.IGamePeer, info string) {
 	// deserialize the packet
 	basePacket := basedefine.GameBasePacket{}
 	if err := json.Unmarshal([]byte(info), &basePacket); err != nil {
-		g.Log.Error("HandlePacket: deserialized failed! err = %v\n", err)
+		g.Log.Error("Game.HandlePacket: deserialized failed! err = %v\n", err)
 		return
 	}
 	// dispatch the packet to handlers
 	if handler, ok := g.Handlers[basePacket.Code]; ok {
+		g.Log.Trace("Game.GameHandler.Handle: code = %d, info = %s\n", handler.Code(), info)
 		handler.Handle(peer, info)
 	} else {
 		g.OnDefaultHandle(peer, info)
@@ -55,11 +62,6 @@ func (g *Game) HandlePacket(peer ginterface.IGamePeer, info string) {
 // GetServer returns the game server
 func (g *Game) GetServer() ginterface.IGameServer {
 	return g.Server
-}
-
-// RegisterHandler registers the packet handler
-func (g *Game) RegisterHandler(handler ginterface.IGameHandler) {
-	g.Handlers[handler.Code()] = handler
 }
 
 // NewGame is a constructor of Game

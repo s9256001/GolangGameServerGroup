@@ -13,7 +13,7 @@ import (
 type SubServerBase struct {
 	*server.GameServer // base class
 
-	Players map[uuid.UUID]sysinfo.PlayerInfo // map of players with key denoting the player key
+	Players map[uuid.UUID]*sysinfo.PlayerInfo // map of players with key denoting the peer id
 }
 
 // GetModule returns the specific module to resolve import cycle
@@ -23,13 +23,13 @@ func (s *SubServerBase) GetModule(m interface{}) interface{} {
 		return ret
 	}
 	switch m.(type) {
-	case map[uuid.UUID]sysinfo.PlayerInfo:
+	case map[uuid.UUID]*sysinfo.PlayerInfo:
 		return s.Players
 	}
 	return nil
 }
 
-// OnRegisterToMaster is called for registering to the master server
+// OnRegisterToMaster is called while registering to the master server
 func (s *SubServerBase) OnRegisterToMaster() {
 	packet := sysdefine.NewRegisterSubServerPacket()
 	packet.ServerType = s.Setting.ServerType
@@ -41,8 +41,8 @@ func (s *SubServerBase) OnRegisterToMaster() {
 // NewSubServerBase is a constructor of SubServerBase
 func NewSubServerBase(hook ginterface.IGameServerHook, serverType int, port int, serverName string, log ginterface.IGameLogger) *SubServerBase {
 	ret := &SubServerBase{}
-	ret.GameServer = server.NewGameServer(hook, serverType, port, serverName, log)
-	ret.Players = make(map[uuid.UUID]sysinfo.PlayerInfo)
+	ret.GameServer = server.NewGameServer(hook, log, serverType, port, serverName)
+	ret.Players = make(map[uuid.UUID]*sysinfo.PlayerInfo)
 	ret.RegisterHandler(syshandler.NewRegisterSubServerResultHandler(ret))
 	return ret
 }

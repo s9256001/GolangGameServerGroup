@@ -9,11 +9,11 @@ import (
 const (
 	// TracePrefix is the prefix of trace output
 	TracePrefix = "TRACE"
-	// DebugPrefix is the prefix of trace output
+	// DebugPrefix is the prefix of debug output
 	DebugPrefix = "DEBUG"
-	// InfoPrefix is the prefix of trace output
+	// InfoPrefix is the prefix of info output
 	InfoPrefix = "INFO"
-	// ErrorPrefix is the prefix of trace output
+	// ErrorPrefix is the prefix of error output
 	ErrorPrefix = "ERROR"
 )
 

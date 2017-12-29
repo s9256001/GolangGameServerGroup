@@ -7,7 +7,7 @@ import (
 
 // IGameServer is an interface of the game server
 type IGameServer interface {
-	INode
+	INode // base interface
 
 	// RegisterHandler registers the packet handler
 	RegisterHandler(handler IGameHandler)
@@ -18,10 +18,10 @@ type IGameServer interface {
 
 	// GetMasterPeer returns the game peer of the master server
 	GetMasterPeer() IGamePeer
-	// GetPeer returns the game peer of the peerID
+	// GetPeer returns the game peer with the peerID
 	GetPeer(peerID uuid.UUID) IGamePeer
 
-	// SendPacket sends packet to the connection
+	// SendPacket sends packet to the peer connection
 	SendPacket(peer IGamePeer, packet interface{}) bool
 }
 
@@ -35,6 +35,6 @@ type IGameServerHook interface {
 	OnCreatePeer(conn *websocket.Conn) IGamePeer
 	// OnDefaultHandle is called when there is no corresponding packet handler
 	OnDefaultHandle(peer IGamePeer, info string)
-	// OnRegisterToMaster is called for registering to the master server
+	// OnRegisterToMaster is called while registering to the master server
 	OnRegisterToMaster()
 }

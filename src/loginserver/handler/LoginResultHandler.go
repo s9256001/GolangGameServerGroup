@@ -9,7 +9,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-// LoginResultHandler handles player's login
+// LoginResultHandler handles the result of player's login
 type LoginResultHandler struct {
 	*handler.GameHandler // base class
 }
@@ -19,7 +19,7 @@ func (h *LoginResultHandler) Code() int {
 	return gamedefine.LoginResult
 }
 
-// OnHandle is called when Handle()
+// OnHandle is called when Handling the packet
 func (h *LoginResultHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	log := h.Node.GetLogger()
 

@@ -9,7 +9,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-// RegisterAccountResultHandler handles the registration of the player's account
+// RegisterAccountResultHandler handles the result of the registration of the player's account
 type RegisterAccountResultHandler struct {
 	*handler.GameHandler // base class
 }
@@ -19,7 +19,7 @@ func (h *RegisterAccountResultHandler) Code() int {
 	return gamedefine.RegisterAccountResult
 }
 
-// OnHandle is called when Handle()
+// OnHandle is called when Handling the packet
 func (h *RegisterAccountResultHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	log := h.Node.GetLogger()
 

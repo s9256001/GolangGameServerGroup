@@ -10,7 +10,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-// EnterRegionResultHandler handles player's entering region
+// EnterRegionResultHandler handles the result of player's entering region
 type EnterRegionResultHandler struct {
 	*handler.GameHandler // base class
 }
@@ -20,10 +20,10 @@ func (h *EnterRegionResultHandler) Code() int {
 	return gamedefine.EnterRegionResult
 }
 
-// OnHandle is called when Handle()
+// OnHandle is called when Handling the packet
 func (h *EnterRegionResultHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	log := h.Node.GetLogger()
-	players := h.Node.(ginterface.IGameServer).GetModule(map[uuid.UUID]sysinfo.PlayerInfo{}).(map[uuid.UUID]sysinfo.PlayerInfo)
+	players := h.Node.(ginterface.IGameServer).GetModule(map[uuid.UUID]*sysinfo.PlayerInfo{}).(map[uuid.UUID]*sysinfo.PlayerInfo)
 
 	packet := &gamedefine.EnterRegionResultPacket{}
 	if err := json.Unmarshal([]byte(info), &packet); err != nil {
@@ -31,11 +31,12 @@ func (h *EnterRegionResultHandler) OnHandle(peer ginterface.IGamePeer, info stri
 		return false
 	}
 
-	players[packet.PlayerInfo.PlayerKey] = sysinfo.PlayerInfo{
+	peerID, _ := uuid.FromString(packet.PeerID)
+
+	players[peerID] = &sysinfo.PlayerInfo{
 		PlayerInfoBase: packet.PlayerInfo,
 	}
 
-	peerID, _ := uuid.FromString(packet.PeerID)
 	clientPeer := h.Node.(ginterface.IGameServer).GetPeer(peerID)
 	packet.PeerID = ""
 	h.Node.(ginterface.IGameServer).SendPacket(clientPeer, packet)

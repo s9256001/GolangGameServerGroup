@@ -8,8 +8,8 @@ type IGameHandler interface {
 	Handle(peer IGamePeer, info string) bool
 }
 
-// IGameHandlerHook is an interface of hook of the packet logger
+// IGameHandlerHook is an interface of hook of the packet handler
 type IGameHandlerHook interface {
-	// OnHandle is called when Handle()
+	// OnHandle is called when Handling the packet
 	OnHandle(peer IGamePeer, info string) bool
 }

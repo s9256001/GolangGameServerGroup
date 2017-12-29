@@ -10,19 +10,20 @@ import (
 // GamePeer is an abstract class of the game peer
 // It fits the interface of IGamePeer
 type GamePeer struct {
-	PeerID uuid.UUID              // the id of the peer
+	PeerID uuid.UUID // the id of the peer
+	// todo
 	IP     string                 // ip of this peer
 	Port   int                    // port of this peer
 	Server ginterface.IGameServer // server
 	Conn   *websocket.Conn        // connection
 }
 
-// GetPeerID gets the id of the peer
+// GetPeerID returns the id of the peer
 func (p *GamePeer) GetPeerID() uuid.UUID {
 	return p.PeerID
 }
 
-// get the connection of the game peer
+// GetConn gets the connection of the game peer
 func (p *GamePeer) GetConn() *websocket.Conn {
 	return p.Conn
 }

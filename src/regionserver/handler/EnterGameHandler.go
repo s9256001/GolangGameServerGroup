@@ -6,9 +6,11 @@ import (
 	"../../base/ginterface"
 	"../../base/handler"
 	"../../gamecommon/gamedefine"
+	"../../servercommon/sysinfo"
+	uuid "github.com/satori/go.uuid"
 )
 
-// EnterGameHandler handles player's entering game
+// EnterGameHandler handles the request of player's entering game
 type EnterGameHandler struct {
 	*handler.GameHandler // base class
 }
@@ -18,14 +20,21 @@ func (h *EnterGameHandler) Code() int {
 	return gamedefine.EnterGame
 }
 
-// OnHandle is called when Handle()
+// OnHandle is called when Handling the packet
 func (h *EnterGameHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	log := h.Node.GetLogger()
+	players := h.Node.(ginterface.IGameServer).GetModule(map[uuid.UUID]*sysinfo.PlayerInfo{}).(map[uuid.UUID]*sysinfo.PlayerInfo)
 	games := h.Node.(ginterface.IGameServer).GetModule(map[int]ginterface.IGame{}).(map[int]ginterface.IGame)
 
 	packet := &gamedefine.EnterGamePacket{}
 	if err := json.Unmarshal([]byte(info), &packet); err != nil {
 		log.Error("EnterGameHandler.OnHandle(): failed to deserialize! info = %s\n", info)
+		return false
+	}
+
+	_, ok := players[peer.GetPeerID()]
+	if !ok {
+		log.Error("EnterGameHandler.OnHandle(): no this player! peerID = %s\n", peer.GetPeerID().String())
 		return false
 	}
 

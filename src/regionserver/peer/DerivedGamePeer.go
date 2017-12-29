@@ -15,13 +15,13 @@ type DerivedGamePeer struct {
 // OnConnected is called when connected
 func (p *DerivedGamePeer) OnConnected() {
 	log := p.Server.GetLogger()
-	log.Debug("OnConnected: peerID = %s\n", p.PeerID)
+	log.Debug("DerivedGamePeer.OnConnected: peerID = %s\n", p.PeerID)
 }
 
 // OnDisconnected is called when disconnected
 func (p *DerivedGamePeer) OnDisconnected() {
 	log := p.Server.GetLogger()
-	log.Debug("OnDisconnected: peerID = %s\n", p.PeerID)
+	log.Debug("DerivedGamePeer.OnDisconnected: peerID = %s\n", p.PeerID)
 }
 
 // NewDerivedGamePeer is a constructor of DerivedGamePeer

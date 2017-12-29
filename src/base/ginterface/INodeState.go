@@ -1,6 +1,6 @@
 package ginterface
 
-// INodeState is the state of the node
+// INodeState represents the state of the node
 type INodeState interface {
 	// OnEnter is called when entering this state
 	OnEnter()

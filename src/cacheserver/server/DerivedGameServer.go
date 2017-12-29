@@ -26,12 +26,12 @@ func (s *DerivedGameServer) OnStart() {
 	// str, _ := json.Marshal(testPacket)
 	// s.GetLog().Debug("%s\n", str)
 
-	s.GetLogger().Debug("OnStart: serverName = %s\n", s.Setting.ServerName)
+	s.GetLogger().Debug("DerivedGameServer.OnStart: serverName = %s\n", s.Setting.ServerName)
 }
 
 // OnStopped is called at the end of Stop()
 func (s *DerivedGameServer) OnStopped() {
-	s.GetLogger().Debug("OnStopped: serverName = %s\n", s.Setting.ServerName)
+	s.GetLogger().Debug("DerivedGameServer.OnStopped: serverName = %s\n", s.Setting.ServerName)
 }
 
 // OnCreatePeer is called to create the custom peer
@@ -41,13 +41,14 @@ func (s *DerivedGameServer) OnCreatePeer(conn *websocket.Conn) ginterface.IGameP
 
 // OnDefaultHandle is called when there is no corresponding packet handler
 func (s *DerivedGameServer) OnDefaultHandle(peer ginterface.IGamePeer, info string) {
-	s.GetLogger().Debug("OnDefaultHandle: info = %s\n", info)
+	s.GetLogger().Debug("DerivedGameServer.OnDefaultHandle: peerID = %s, info = %s\n", peer.GetPeerID().String(), info)
 }
 
 // NewDerivedGameServer is a constructor of DerivedGameServer
 func NewDerivedGameServer() *DerivedGameServer {
 	log := servercommon.NewConsoleGameLogger()
 	ret := &DerivedGameServer{}
+	// todo
 	ret.MasterServerBase = servercommon.NewMasterServerBase(ret, sysdefine.ServerTypeCache, 7770, "cache", log)
 	ret.RegisterHandler(handler.NewRegisterAccountHandler(ret))
 	ret.RegisterHandler(handler.NewLoginHandler(ret))

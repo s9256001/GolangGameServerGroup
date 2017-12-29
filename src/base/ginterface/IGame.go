@@ -2,16 +2,19 @@ package ginterface
 
 // IGame is an interface of a game
 type IGame interface {
-	INode
+	INode // base interface
 
 	// GameID gets the game ID of the game
 	GameID() int
+	// RegisterHandler registers the packet handler
+	RegisterHandler(handler IGameHandler)
 	// Init initlizes the game
 	Init(setting interface{}) bool
 	// Release releases the game
 	Release() bool
 	// HandlePacket handles the packet
 	HandlePacket(peer IGamePeer, info string)
+	// todo
 	// GetServer returns the game server
 	GetServer() IGameServer
 }

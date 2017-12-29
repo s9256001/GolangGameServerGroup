@@ -18,7 +18,7 @@ func (h *RegisterSubServerResultHandler) Code() int {
 	return sysdefine.RegisterSubServerResult
 }
 
-// OnHandle is called when Handle()
+// OnHandle is called when Handling the packet
 func (h *RegisterSubServerResultHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	log := h.Node.(ginterface.IGameServer).GetLogger()
 
@@ -26,6 +26,11 @@ func (h *RegisterSubServerResultHandler) OnHandle(peer ginterface.IGamePeer, inf
 	if err := json.Unmarshal([]byte(info), &packet); err != nil {
 		log.Error("RegisterSubServerResultHandler.OnHandle(): failed to deserialize! info = %s\n", info)
 		return false
+	}
+
+	if packet.Result != sysdefine.OK {
+		log.Error("RegisterSubServerResultHandler.OnHandle(): result is not ok! result = %d\n", packet.Result)
+		h.Node.(ginterface.IGameServer).Stop()
 	}
 	return true
 }

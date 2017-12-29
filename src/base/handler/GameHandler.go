@@ -19,9 +19,6 @@ func (h *GameHandler) Code() int {
 
 // Handle handles the packet
 func (h *GameHandler) Handle(peer ginterface.IGamePeer, info string) bool {
-	log := h.Node.GetLogger()
-
-	log.Trace("Handle: code = %d, info = %s\n", h.Code(), info)
 	return h.OnHandle(peer, info)
 }
 

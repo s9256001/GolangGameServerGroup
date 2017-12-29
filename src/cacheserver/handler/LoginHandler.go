@@ -13,7 +13,7 @@ import (
 	"../../servercommon/sysinfo"
 )
 
-// LoginHandler handles player's login
+// LoginHandler handles the request of player's login
 type LoginHandler struct {
 	*handler.GameHandler // base class
 }
@@ -23,13 +23,16 @@ func (h *LoginHandler) Code() int {
 	return gamedefine.Login
 }
 
-// OnHandle is called when Handle()
+// OnHandle is called when Handling the packet
 func (h *LoginHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	log := h.Node.GetLogger()
-	subServers := h.Node.(ginterface.IGameServer).GetModule(map[uuid.UUID]sysinfo.SubServerInfo{}).(map[uuid.UUID]sysinfo.SubServerInfo)
-	players := h.Node.(ginterface.IGameServer).GetModule(map[uuid.UUID]sysinfo.PlayerInfo{}).(map[uuid.UUID]sysinfo.PlayerInfo)
+	subServers := h.Node.(ginterface.IGameServer).GetModule(map[uuid.UUID]*sysinfo.SubServerInfo{}).(map[uuid.UUID]*sysinfo.SubServerInfo)
+	players := h.Node.(ginterface.IGameServer).GetModule(map[uuid.UUID]*sysinfo.PlayerInfo{}).(map[uuid.UUID]*sysinfo.PlayerInfo)
 
 	response := gamedefine.NewLoginResultPacket()
+	response.Result = sysdefine.Failed
+
+	defer h.Node.(ginterface.IGameServer).SendPacket(peer, response)
 
 	packet := &gamedefine.LoginPacket{}
 	if err := json.Unmarshal([]byte(info), &packet); err != nil {
@@ -38,7 +41,7 @@ func (h *LoginHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	}
 
 	playerKey := uuid.NewV4()
-	players[playerKey] = sysinfo.PlayerInfo{
+	players[playerKey] = &sysinfo.PlayerInfo{
 		PlayerInfoBase: sysinfo.PlayerInfoBase{
 			PlayerKey: playerKey,
 			Name:      packet.Account,
@@ -57,7 +60,6 @@ func (h *LoginHandler) OnHandle(peer ginterface.IGamePeer, info string) bool {
 	response.RegionAddress = regionAddress
 	response.PlayerKey = playerKey.String()
 	response.Result = sysdefine.OK
-	h.Node.(ginterface.IGameServer).SendPacket(peer, response)
 	return true
 }
 

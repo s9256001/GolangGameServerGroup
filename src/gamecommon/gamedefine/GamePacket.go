@@ -20,7 +20,7 @@ func NewRegisterAccountPacket() *RegisterAccountPacket {
 	return ret
 }
 
-// RegisterAccountResultPacket is the packet of response of registration of player's login
+// RegisterAccountResultPacket is the packet of response of registration of player's account
 type RegisterAccountResultPacket struct {
 	basedefine.GameBasePacket        // base packet
 	PeerID                    string `json:",omitempty"` // player's peer id
@@ -81,10 +81,11 @@ func NewEnterRegionPacket() *EnterRegionPacket {
 
 // EnterRegionResultPacket is the packet of response of player's entering region
 type EnterRegionResultPacket struct {
-	basedefine.GameBasePacket                        // base packet
-	PeerID                    string                 `json:",omitempty"` // player's peer id
-	PlayerInfo                sysinfo.PlayerInfoBase // the information of the player
-	Result                    int                    // result
+	basedefine.GameBasePacket        // base packet
+	PeerID                    string `json:",omitempty"` // player's peer id
+	// todo
+	PlayerInfo sysinfo.PlayerInfoBase // the information of the player
+	Result     int                    // result
 }
 
 // NewEnterRegionResultPacket is a constructor of EnterRegionResultPacket

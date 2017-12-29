@@ -2,8 +2,8 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
-	"strconv"
 
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/net/websocket"
@@ -44,7 +44,7 @@ func (s *GameServer) RegisterHandler(handler ginterface.IGameHandler) {
 
 // Start starts the server
 func (s *GameServer) Start() bool {
-	addr := ":" + strconv.Itoa(s.Setting.Port)
+	addr := fmt.Sprintf(":%d", s.Setting.Port)
 	s.Handle = &http.Server{Addr: addr}
 
 	// router
@@ -53,6 +53,7 @@ func (s *GameServer) Start() bool {
 
 	// connect to the master server
 	if s.Setting.MasterURL != "" {
+		// todo
 		ws, err := websocket.Dial(s.Setting.MasterURL, "", "http://localhost/")
 		if err != nil {
 			s.Log.Error("Start: cannot connect to the master! err = %v\n", err)
@@ -77,6 +78,7 @@ func (s *GameServer) Start() bool {
 
 	// service loop
 	if err := http.ListenAndServe(addr, nil); err != nil {
+		s.Log.Error("Start: ListenAndServe() failed! err = %v\n", err)
 		return false
 	}
 	return true
@@ -97,7 +99,7 @@ func (s *GameServer) GetMasterPeer() ginterface.IGamePeer {
 	return s.MasterPeer
 }
 
-// GetPeer returns the game peer of the peerID
+// GetPeer returns the game peer with the peerID
 func (s *GameServer) GetPeer(peerID uuid.UUID) ginterface.IGamePeer {
 	peer, ok := s.Peers[peerID]
 	if !ok {
@@ -106,7 +108,7 @@ func (s *GameServer) GetPeer(peerID uuid.UUID) ginterface.IGamePeer {
 	return peer
 }
 
-// SendPacket sends packet to the connection
+// SendPacket sends packet to the peer connection
 func (s *GameServer) SendPacket(peer ginterface.IGamePeer, packet interface{}) bool {
 	if peer == nil {
 		s.Log.Error("SendPacket: peer is nil")
@@ -139,9 +141,9 @@ func (s *GameServer) PeerHandler(ws *websocket.Conn) {
 
 // PeerReceiveLoop is the service loop for waitting to receive a message
 func (s *GameServer) PeerReceiveLoop(peer ginterface.IGamePeer) {
-	var receivedMessage string
 	for {
 		// wait to receive a message
+		var receivedMessage string
 		if err := websocket.Message.Receive(peer.GetConn(), &receivedMessage); err != nil {
 			s.Log.Error("PeerHandler: receive failed! err = %v\n", err)
 			peer.OnDisconnected()
@@ -158,6 +160,7 @@ func (s *GameServer) PeerReceiveLoop(peer ginterface.IGamePeer) {
 
 		// dispatch the packet to handlers
 		if handler, ok := s.Handlers[basePacket.Code]; ok {
+			s.Log.Trace("GameServer.GameHandler.Handle: code = %d, receivedMessage = %s\n", handler.Code(), string(receivedMessage))
 			handler.Handle(peer, string(receivedMessage))
 		} else {
 			s.OnDefaultHandle(peer, string(receivedMessage))
@@ -166,7 +169,7 @@ func (s *GameServer) PeerReceiveLoop(peer ginterface.IGamePeer) {
 }
 
 // NewGameServer is a constructor of GameServer
-func NewGameServer(hook ginterface.IGameServerHook, serverType int, port int, serverName string, log ginterface.IGameLogger) *GameServer {
+func NewGameServer(hook ginterface.IGameServerHook, log ginterface.IGameLogger, serverType int, port int, serverName string) *GameServer {
 	ret := &GameServer{
 		IGameServerHook: hook,
 		Node:            node.NewNode(log),
